@@ -69,8 +69,8 @@ class WordClockUsermod1616NL : public Usermod
       {   0,   1,   2,   4,   5,  -1,  -1,  -1 }, // 21 - het is (it is)
       { 144, 146, 147, 148, 149, 150, 151,  -1 }, // 22 - snachts
       { 151, 153, 154, 155, 156, 157, 158, 159 }, // 23 - smiddags
-      { 169, 172, 173, 174, 175, 176, 177,  -1 }, // 24 - savonds
-      { 177, 179, 180, 181, 182, 183, 184, 185 }  // 25 - smorgens
+      { 160, 162, 163, 164, 165, 166, 167,  -1 }, // 24 - savonds
+      { 167, 169, 170, 171, 172, 173, 174, 175 }  // 25 - smorgens
     };
 
     // hour masks
@@ -223,7 +223,6 @@ class WordClockUsermod1616NL : public Usermod
       
       // calc part of day
       partOfDayIndex = 22;
-      if (hours<7) partOfDayIndex = 22;
       if (hours>=7 && hours<13) partOfDayIndex = 25;
       if (hours>=13 && hours<19) partOfDayIndex = 23;
       if (hours>=19) partOfDayIndex = 24;
