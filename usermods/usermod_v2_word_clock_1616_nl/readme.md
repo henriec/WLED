@@ -44,4 +44,6 @@ F | 0 1 2 3 4 5 0 1 2 3 4 5 6 7 8 9
 ## Change Log
 
 2023/12/25 cloned from usermod_v2_word_clock
+2023/12/26 fixed day-part postition
+2024/01/04 fixed wrong pixel index for "tien"
 
