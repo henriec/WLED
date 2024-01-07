@@ -222,11 +222,11 @@ class WordClockUsermod1616NL : public Usermod
       int partOfDayIndex;
       
       // calc part of day
-      partOfDayIndex = 22;
-      if (hours>=7 && hours<13) partOfDayIndex = 25;
-      if (hours>=13 && hours<19) partOfDayIndex = 23;
-      if (hours>=19) partOfDayIndex = 24;
-      
+      partOfDayIndex = 22;                                    // 22 - snachts
+      if (hours>=7 && hours<12) partOfDayIndex = 25;          // 25 - smorgens
+      if (hours>=12 && hours<19) partOfDayIndex = 23;         // 23 - smiddags
+      if (hours>=19) partOfDayIndex = 24;                     // 24 - savonds
+
       // calc hours index
       if ( minutes>15 ) hoursIndex++;
       hoursIndex %= 12;
