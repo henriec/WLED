@@ -6,8 +6,11 @@
  * Usermods allow you to add own functionality to WLED more easily
  * See: https://github.com/Aircoookie/WLED/wiki/Add-own-functionality
  *
- * This usermod can be used to drive a wordclock with a 11x10 pixel matrix with WLED. There are also 4 additional dots for the minutes.
- * The visualisation is described in 4 mask with LED numbers (single dots for minutes, minutes, hours and "clock/Uhr").
+ * This usermod can be used to drive a wordclock with a 16x16 pixel matrix with WLED.
+ * The clock resolution is in minutes with an extra line creating the seconds. I also
+ * managed to fit in the date displayed by the day numer and month abbreviation.
+ * The language for the clock in Dutch, in the readme you can find the layout mask for
+ * the words.
  * There are 2 parameters to change the behaviour:
  *
  * active: enable/disable usermod
@@ -31,7 +34,7 @@ class WordClockUsermod1616NL : public Usermod
     #define maskSizeHours       6
     #define maskSizeSeconds     1
     #define maskSizeMonths      3
-    
+
     // "minute" masks (and some extra words)
     //   | 0123456789ABCDEF
     // --+-----------------
@@ -130,7 +133,7 @@ class WordClockUsermod1616NL : public Usermod
     {
       { 194,195,196 }, // 00 jan
       { 197,198,199 }, // 01 feb
-      { 200,201,202 }, // 02 mrt 
+      { 200,201,202 }, // 02 mrt
       { 203,204,205 }, // 03 apr
       { 210,211,212 }, // 04 mei
       { 213,214,215 }, // 05 jun
@@ -218,9 +221,9 @@ class WordClockUsermod1616NL : public Usermod
       bool voor = false; // before / to
       bool over = false; // after / past
       bool half = false; // "half"-o-clock ;-)
-      bool minuten = false; 
+      bool minuten = false;
       int partOfDayIndex;
-      
+
       // calc part of day
       partOfDayIndex = 22;                                    // 22 - snachts
       if (hours>=7 && hours<12) partOfDayIndex = 25;          // 25 - smorgens
@@ -230,7 +233,7 @@ class WordClockUsermod1616NL : public Usermod
       // calc hours index
       if ( minutes>15 ) hoursIndex++;
       hoursIndex %= 12;
-      
+
       // calc minutes index
       if ( minutesIndex==15 ) {
         over = true;
@@ -261,14 +264,14 @@ class WordClockUsermod1616NL : public Usermod
         voor = true;
         minuten = true;
       }
-      if( minutesIndex > 21 ) 
+      if( minutesIndex > 21 )
         minutesIndex = 0;
 
       // updateLedMask
       if (half)
         updateLedMask(maskMinutes[16], maskSizeMinutes);
       if (minuten) {
-        if (minutesIndex==1) 
+        if (minutesIndex==1)
           updateLedMask(maskMinutes[17], maskSizeMinutes);
         else
           updateLedMask(maskMinutes[18], maskSizeMinutes);
@@ -288,7 +291,7 @@ class WordClockUsermod1616NL : public Usermod
       updateLedMask(maskMonths[(months+11)%12], maskSizeMonths);
       updateLedMask(maskDays[(days%10)], maskSizeSeconds);
       updateLedMask(maskDayTens[dayTens], maskSizeSeconds);
-      
+
     }
 
   public:
