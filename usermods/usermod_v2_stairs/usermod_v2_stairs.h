@@ -35,21 +35,21 @@ class StairsUsermod : public Usermod {
 
   void handleOverlayDraw()
     {
-      int maskSizeLeds = 225;
-      // check if usermod is active
-      if (usermodActive == true)
-      {
-        // loop over all leds
-        for (int x = 0; x < maskSizeLeds; x++)
-        {
-          // check mask
-          if (maskLedsOn[x] == 0)
-          {
-            // set pixel off
-            strip.setPixelColor(x + ledOffset, RGBW32(0,0,0,0));
-          }
-        }
-      }
+      // int maskSizeLeds = 225;
+      // // check if usermod is active
+      // if (usermodActive == true)
+      // {
+      //   // loop over all leds
+      //   for (int x = 0; x < maskSizeLeds; x++)
+      //   {
+      //     // check mask
+      //     if (maskLedsOn[x] == 0)
+      //     {
+      //       // set pixel off
+      //       strip.setPixelColor(x + ledOffset, RGBW32(0,0,0,0));
+      //     }
+      //   }
+      // }
     }
 
     /*
