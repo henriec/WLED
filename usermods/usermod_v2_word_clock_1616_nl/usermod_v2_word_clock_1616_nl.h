@@ -480,7 +480,7 @@ class WordClockUsermod1616NL : public Usermod
      */
     uint16_t getId()
     {
-      return USERMOD_ID_WORDCLOCK;
+      return USERMOD_ID_WORDCLOCK_1616_NL;
     }
 
    //More methods can be added in the future, this example will then be extended.
