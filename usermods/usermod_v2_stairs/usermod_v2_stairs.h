@@ -9,47 +9,121 @@ static void IRAM_ATTR motionBottom() {
 
 #define triggerPinBottom  25
 #define nrOfSteps         15
-#define ledsPerStep       15
+#define nrOfLeds         225
 
 // This is an v2 usermod which uses interrupts to light the stairs.
 
 class StairsUsermod : public Usermod {
   private:
+    bool lightingCeremonyActive = false;
+    bool stairsOn = false;
     bool usermodActive = true; // Enable this usermod
+    unsigned long lastTime = 0;
+    unsigned long offTime = 0;
+    int delayTime = 75 ; //millis
+    //int ledOffset = 0;
+    int curLed = 0;
+    int lightingSteps = nrOfSteps + (nrOfLeds/nrOfSteps)/2 ; // nrOfSteps + half stepwidth
+    // overall mask to define which LEDs are on
+    int maskLedsOn[nrOfLeds] =
+    {
+      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+    };
 
   void publishMqtt(const char* state, bool retain = false); // example for publishing MQTT message
 
   public:
     void setup() {
+      // force strip to be configured as matrix
+      // if (!strip.isMatrix) {
+      //   usermodActive = false;
+      //   return;
+      // }
+
       pinMode(triggerPinBottom, INPUT_PULLDOWN);
       attachInterrupt(digitalPinToInterrupt(triggerPinBottom), motionBottom, RISING);
+      //nrOfLeds = strip.getLengthTotal();
+      //publishMqtt("Setup ready");
+
     }
+
+  void updateMask() {
+    for (int x = 0; x < 8; x++) { maskLedsOn[7+x]=x+1; maskLedsOn[7-x]=x+1;}
+    for (int i = 0; i < 14; i++)
+      for (int j = 0; j < 15; j++)
+         maskLedsOn[15+i*15+j]=maskLedsOn[i*15+j]+1;
+    for (int x = 0; x < nrOfLeds; x++)
+      if (maskLedsOn[x]>curLed) maskLedsOn[x] = 0;
+  }
 
   void loop() {
     if (!usermodActive || strip.isUpdating()) return;
+
     if (motionBottomDetected) {
       publishMqtt("Yo Bottom Movement!");
       motionBottomDetected = false;
+      if (!lightingCeremonyActive && !stairsOn) {
+          curLed = 0;
+          lightingCeremonyActive = true;
+          stairsOn = true;
+      }
+      offTime = millis() + 15000;
     }
+
+    if (lightingCeremonyActive == true){
+      if ((millis() - lastTime) > delayTime) {
+        lastTime = millis();
+        if (curLed<lightingSteps)curLed++; // move pointer so led wil be lit
+        updateMask();
+        strip.trigger();
+        if (curLed>=lightingSteps) {
+          lightingCeremonyActive = false;
+          publishMqtt("curled on max");
+        }
+      }
+    }
+
+    if (offTime < millis()){
+      curLed=0;
+      updateMask();
+      stairsOn=false;
+      publishMqtt("stairs off");
+    }
+
+
   }
 
-  void handleOverlayDraw()
+void handleOverlayDraw()
     {
-      // int maskSizeLeds = 225;
-      // // check if usermod is active
-      // if (usermodActive == true)
-      // {
-      //   // loop over all leds
-      //   for (int x = 0; x < maskSizeLeds; x++)
-      //   {
-      //     // check mask
-      //     if (maskLedsOn[x] == 0)
-      //     {
-      //       // set pixel off
-      //       strip.setPixelColor(x + ledOffset, RGBW32(0,0,0,0));
-      //     }
-      //   }
-      // }
+      // check if usermod is active
+      if (usermodActive == true)
+      {
+        // loop over all leds
+        for (int x = 0; x < nrOfLeds; x++)
+        {
+          // check mask
+          if (maskLedsOn[x] == 0)
+          {
+            // set pixel off
+            //strip.setPixelColor(x + ledOffset, RGBW32(0,0,0,0));
+            strip.setPixelColor(nrOfLeds-x , RGBW32(0,0,0,0));
+          }
+        }
+      }
     }
 
     /*
@@ -70,7 +144,7 @@ void StairsUsermod::publishMqtt(const char* state, bool retain)
   if (WLED_MQTT_CONNECTED) {
     char subuf[64];
     strcpy(subuf, mqttDeviceTopic);
-    strcat_P(subuf, PSTR("/bottom"));
+    strcat_P(subuf, PSTR("/stairs"));
     mqtt->publish(subuf, 0, retain, state);
   }
 #endif

@@ -333,7 +333,7 @@ void registerUsermods()
   #endif
 
   #ifdef USERMOD_STAIRS
-    #include "../usermods/usermod_v2_stairs/usermod_v2_stairs.h"
+  usermods.add(new StairsUsermod());
   #endif
 
   #ifdef USERMOD_MY9291
