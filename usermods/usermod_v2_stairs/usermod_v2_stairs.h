@@ -120,7 +120,7 @@ void handleOverlayDraw()
           {
             // set pixel off
             //strip.setPixelColor(x + ledOffset, RGBW32(0,0,0,0));
-            strip.setPixelColor(nrOfLeds-x , RGBW32(0,0,0,0));
+            strip.setPixelColor(nrOfLeds-1-x , RGBW32(0,0,0,0));
           }
         }
       }
