@@ -15,17 +15,17 @@ static void IRAM_ATTR motionBottom() {
 
 class StairsUsermod : public Usermod {
   private:
+    int delayTime = 100 ; //millis
+    int onTime = 20 ; //seconds
+
     bool lightingCeremonyActive = false;
     bool stairsOn = false;
     bool usermodActive = true; // Enable this usermod
     unsigned long lastTime = 0;
     unsigned long offTime = 0;
-    int delayTime = 75 ; //millis
-    //int ledOffset = 0;
     int curLed = 0;
     int lightingSteps = nrOfSteps + (nrOfLeds/nrOfSteps)/2 ; // nrOfSteps + half stepwidth
-    // overall mask to define which LEDs are on
-    int maskLedsOn[nrOfLeds] =
+    int maskLedsOn[nrOfLeds] = // overall mask to define which LEDs are on
     {
       0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
       0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -48,17 +48,8 @@ class StairsUsermod : public Usermod {
 
   public:
     void setup() {
-      // force strip to be configured as matrix
-      // if (!strip.isMatrix) {
-      //   usermodActive = false;
-      //   return;
-      // }
-
       pinMode(triggerPinBottom, INPUT_PULLDOWN);
       attachInterrupt(digitalPinToInterrupt(triggerPinBottom), motionBottom, RISING);
-      //nrOfLeds = strip.getLengthTotal();
-      //publishMqtt("Setup ready");
-
     }
 
   void updateMask() {
@@ -81,7 +72,7 @@ class StairsUsermod : public Usermod {
           lightingCeremonyActive = true;
           stairsOn = true;
       }
-      offTime = millis() + 15000;
+      offTime = millis() + onTime*1000;
     }
 
     if (lightingCeremonyActive == true){
@@ -103,8 +94,6 @@ class StairsUsermod : public Usermod {
       stairsOn=false;
       publishMqtt("stairs off");
     }
-
-
   }
 
 void handleOverlayDraw()
