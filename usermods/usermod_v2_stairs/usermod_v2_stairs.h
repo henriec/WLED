@@ -15,7 +15,7 @@ static void IRAM_ATTR motionBottom() {
 
 class StairsUsermod : public Usermod {
   private:
-    int delayTime = 100 ; //millis
+    int delayTime = 75 ; //millis
     int onTime = 20 ; //seconds
 
     bool lightingCeremonyActive = false;
@@ -88,7 +88,7 @@ class StairsUsermod : public Usermod {
       }
     }
 
-    if (offTime < millis()){
+    if (offTime < millis() && stairsOn){
       curLed=0;
       updateMask();
       stairsOn=false;
@@ -110,7 +110,7 @@ void handleOverlayDraw()
             // set pixel off
             //strip.setPixelColor(x + ledOffset, RGBW32(0,0,0,0));
             strip.setPixelColor(nrOfLeds-1-x , RGBW32(0,0,0,0));
-          }
+}
         }
       }
     }
