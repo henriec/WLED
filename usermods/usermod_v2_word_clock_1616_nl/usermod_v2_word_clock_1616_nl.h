@@ -64,11 +64,11 @@ class WordClockUsermod1616NL : public Usermod
       {  57,  58,  59,  60,  61,  62,  63,  -1 }, // 13 - dertien
       {  64,  65,  66,  67,  68,  69,  70,  71 }, // 14 - veertien
       {  16,  17,  18,  19,  20,  -1,  -1,  -1 }, // 15 - kwart
-      {  89,  90,  91,  92,  -1,  -1,  -1,  -1 }, // 16 - half
+      {  90,  91,  92,  93,  -1,  -1,  -1,  -1 }, // 16 - half
       {  42,  43,  44,  45,  46,  47,  -1,  -1 }, // 17 - minuut
       {  73,  74,  75,  76,  77,  78,  79,  -1 }, // 18 - minuten
       {  80,  81,  82,  83,  -1,  -1,  -1,  -1 }, // 19 - voor
-      {  84,  85,  86,  87,  -1,  -1,  -1,  -1 }, // 20 - over
+      {  85,  86,  87,  88,  -1,  -1,  -1,  -1 }, // 20 - over
       {   0,   1,   2,   4,   5,  -1,  -1,  -1 }, // 21 - het is (it is)
       { 144, 146, 147, 148, 149, 150, 151,  -1 }, // 22 - snachts
       { 151, 153, 154, 155, 156, 157, 158, 159 }, // 23 - smiddags
@@ -147,26 +147,27 @@ class WordClockUsermod1616NL : public Usermod
 
     const int maskDays[10][maskSizeSeconds] =
     {
-      { 181 }, // 00
-      { 182 }, // 01
-      { 183 }, // 02
-      { 184 }, // 03
-      { 185 }, // 04
-      { 186 }, // 05
-      { 187 }, // 06
-      { 188 }, // 07
-      { 189 }, // 08
-      { 190 }  // 09
+      { 182 }, // 00
+      { 183 }, // 01
+      { 184 }, // 02
+      { 185 }, // 03
+      { 186 }, // 04
+      { 187 }, // 05
+      { 188 }, // 06
+      { 189 }, // 07
+      { 190 }, // 08
+      { 191 }  // 09
     };
 
-    const int maskDayTens[4][maskSizeSeconds] =
+    const int maskDayTens[6][maskSizeSeconds] =
     {
-      {  -1 }, // 00
-      { 178 }, // 01
-      { 179 }, // 02
-      { 180 }, // 03
+      { 176 }, // 00
+      { 177 }, // 01
+      { 178 }, // 02
+      { 179 }, // 03
+      { 180 }, // 04
+      { 181 }, // 05
     };
-
 
 
     // overall mask to define which LEDs are on
@@ -227,8 +228,10 @@ class WordClockUsermod1616NL : public Usermod
       // calc part of day
       partOfDayIndex = 22;                                    // 22 - snachts
       if (hours>=7 && hours<12) partOfDayIndex = 25;          // 25 - smorgens
-      if (hours>=12 && hours<19) partOfDayIndex = 23;         // 23 - smiddags
-      if (hours>=19) partOfDayIndex = 24;                     // 24 - savonds
+      if (hours>=12 && hours<18) partOfDayIndex = 23;         // 23 - smiddags
+      if (hours==17 && minutes>15) partOfDayIndex = 24;       // 24 - savonds
+      if (hours>=18) partOfDayIndex = 24;                     // 24 - savonds
+
 
       // calc hours index
       if ( minutes>15 ) hoursIndex++;
