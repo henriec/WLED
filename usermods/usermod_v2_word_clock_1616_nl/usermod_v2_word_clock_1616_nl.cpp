@@ -489,3 +489,7 @@ class WordClockUsermod1616NL : public Usermod
    //More methods can be added in the future, this example will then be extended.
    //Your usermod will remain compatible as it does not need to implement all methods from the Usermod base class!
 };
+
+
+static WordClockUsermod1616NL usermod_v2_word_clock_1616_nl;
+REGISTER_USERMOD(usermod_v2_word_clock_1616_nl);
